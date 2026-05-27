@@ -7,9 +7,12 @@ public record AlunoCardDTO(
         String anonymousName,
         String avatarUrl,
         String area,
+        String seniority,
         String city,
         String state,
         String salary,
         Boolean firstJobInIt,
-        String keyInsight
+        String keyInsight,
+        String stacks,
+        String courseTime
 ) {}

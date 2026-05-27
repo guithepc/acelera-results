@@ -58,11 +58,14 @@ public class AdminAlunoResource {
         if (a == null) throw new NotFoundException();
         a.area         = req.area;
         a.gender       = req.gender;
+        a.seniority    = req.seniority;
         a.city         = req.city;
         a.state        = req.state.toUpperCase();
         a.salary       = req.salary;
         a.firstJobInIt = req.firstJobInIt;
         a.keyInsight   = req.keyInsight;
+        a.stacks       = req.stacks;
+        a.courseTime    = req.courseTime;
         return Response.ok(toAdminDTO(a)).build();
     }
 
@@ -91,7 +94,7 @@ public class AdminAlunoResource {
 
     private AlunoAdminDTO toAdminDTO(Aluno a) {
         return new AlunoAdminDTO(a.id, a.anonymousName, a.avatarUrl,
-                a.area, a.gender, a.city, a.state, a.salary,
-                a.firstJobInIt, a.keyInsight, a.lat, a.lng, a.createdAt);
+                a.area, a.gender, a.seniority, a.city, a.state, a.salary,
+                a.firstJobInIt, a.keyInsight, a.stacks, a.courseTime, a.lat, a.lng, a.createdAt);
     }
 }

@@ -1,4 +1,4 @@
-import type { AlunoArea } from '../types';
+import type { AlunoArea, AlunoSeniority } from '../types';
 
 export const AREA_COLORS: Record<AlunoArea, string> = {
   FRONTEND:      '#60A5FA',
@@ -24,4 +24,13 @@ export const AREA_LABELS: Record<AlunoArea, string> = {
   QA:            'QA',
   IA_AUTOMACOES: 'I.A/Automações',
   SUPORTE:       'Suporte',
+};
+
+export const SENIORITY_LABELS: Record<AlunoSeniority, string> = {
+  TRAINEE:    'Trainee',
+  ESTAGIO:    'Estágio',
+  JUNIOR:     'Júnior',
+  PLENO:      'Pleno',
+  SENIOR:     'Sênior',
+  ASSISTENTE: 'Assistente',
 };

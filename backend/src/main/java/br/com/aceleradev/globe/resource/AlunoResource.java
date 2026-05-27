@@ -37,8 +37,8 @@ public class AlunoResource {
         if (a == null) throw new NotFoundException();
         return new AlunoCardDTO(
                 a.id, a.anonymousName, a.avatarUrl,
-                a.area.name(), a.city, a.state,
-                a.salary, a.firstJobInIt, a.keyInsight);
+                a.area.name(), a.seniority != null ? a.seniority.name() : null,
+                a.city, a.state, a.salary, a.firstJobInIt, a.keyInsight, a.stacks, a.courseTime);
     }
 
     @GET

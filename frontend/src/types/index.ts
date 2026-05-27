@@ -21,16 +21,27 @@ export interface AlunoGlobe {
   avatarUrl: string;
 }
 
+export type AlunoSeniority =
+  | 'TRAINEE'
+  | 'ESTAGIO'
+  | 'JUNIOR'
+  | 'PLENO'
+  | 'SENIOR'
+  | 'ASSISTENTE';
+
 export interface AlunoCard {
   id: string;
   anonymousName: string;
   avatarUrl: string;
   area: AlunoArea;
+  seniority: AlunoSeniority | null;
   city: string;
   state: string;
   salary: string;
   firstJobInIt: boolean;
   keyInsight: string;
+  stacks: string | null;
+  courseTime: string | null;
 }
 
 export interface AlunoAdmin extends AlunoCard {
