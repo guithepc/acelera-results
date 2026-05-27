@@ -99,7 +99,7 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
       container: containerRef.current,
       style: 'mapbox://styles/mapbox/dark-v11',
       center: [-9.14, 38.74],
-      zoom: 11,
+      zoom: 2,
       projection: 'globe',
       attributionControl: false,
     });
@@ -116,9 +116,27 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
 
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
 
+    let spinning = true;
+
+    const spinGlobe = () => {
+      if (!spinning) return;
+      const center = map.getCenter();
+      center.lng -= 1;
+      map.easeTo({ center, duration: 1000, easing: t => t });
+    };
+
+    const stopSpin = () => { spinning = false; };
+
+    map.on('load', spinGlobe);
+    map.on('moveend', spinGlobe);
+    map.on('mousedown', stopSpin);
+    map.on('touchstart', stopSpin);
+    map.on('click', stopSpin);
+
     mapRef.current = map;
 
     return () => {
+      spinning = false;
       map.remove();
       mapRef.current = null;
     };
