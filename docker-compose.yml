@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER:     ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB:       ${DB_NAME}
+    volumes:
+      - ./volumes/pgdata:/var/lib/postgresql/data
+    networks: [internal]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      DB_USER:            ${DB_USER}
+      DB_PASS:            ${DB_PASS}
+      DB_HOST:            postgres
+      DB_NAME:            ${DB_NAME}
+      ANTHROPIC_API_KEY:  ${ANTHROPIC_API_KEY}
+      ADMIN_TOKEN:        ${ADMIN_TOKEN}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [internal]
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    networks: [internal]
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./volumes/caddy_data:/data
+      - ./volumes/caddy_config:/config
+    depends_on:
+      - backend
+      - frontend
+    networks: [internal, public]
+
+networks:
+  internal:
+    driver: bridge
+  public:
+    driver: bridge

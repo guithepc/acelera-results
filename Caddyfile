@@ -1,0 +1,19 @@
+aceleradev.com.br {
+    encode zstd gzip
+
+    @api path /resultados/api/*
+    handle @api {
+        uri strip_prefix /resultados
+        reverse_proxy backend:8080
+    }
+
+    @front path /resultados /resultados/*
+    handle @front {
+        uri strip_prefix /resultados
+        reverse_proxy frontend:80
+    }
+
+    handle {
+        respond 404
+    }
+}

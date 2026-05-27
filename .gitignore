@@ -1,0 +1,4 @@
+.env
+volumes/
+*.log
+.DS_Store

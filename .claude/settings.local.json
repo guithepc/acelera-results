@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn -v)",
+      "Bash(mvn -q compile)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(mvn -q package -DskipTests)"
+    ]
+  }
+}
