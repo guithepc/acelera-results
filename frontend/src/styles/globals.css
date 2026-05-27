@@ -34,7 +34,7 @@ button {
 }
 
 .aluno-popup .mapboxgl-popup-tip {
-  border-top-color: rgba(8, 10, 20, 0.95);
+  display: none;
 }
 
 .aluno-popup .mapboxgl-popup-close-button {

@@ -23,7 +23,7 @@ function buildPopupHTML(card: AlunoCard): string {
   return `
     <div style="display:flex;gap:12px;align-items:flex-start;min-width:260px;max-width:300px;">
       <img src="${card.avatarUrl}" alt="${card.anonymousName}"
-        style="width:52px;height:52px;border-radius:50%;border:2px solid ${color}66;flex-shrink:0;background:#0a0f1e;" />
+        style="width:69px;height:69px;border-radius:50%;border:2px solid #2a2a2e;box-shadow:0 0 12px #34d399, 0 0 24px #34d39988;flex-shrink:0;background:#1a1a1e;" />
       <div style="flex:1;min-width:0;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <strong style="color:#fff;font-size:13px;line-height:1.3;">${card.anonymousName}</strong>
@@ -69,7 +69,7 @@ function buildLoadingHTML(): string {
 export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selectedId, card, loadingCard, onClose }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
-  const markersRef = useRef<mapboxgl.Marker[]>([]);
+  const markersRef = useRef<Map<string, { marker: mapboxgl.Marker; wrapper: HTMLDivElement }>>(new Map());
   const popupRef = useRef<mapboxgl.Popup | null>(null);
   const replacingPopupRef = useRef(false);
 
@@ -113,14 +113,12 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
     const map = mapRef.current;
     if (!map) return;
 
-    markersRef.current.forEach(m => m.remove());
-    markersRef.current = [];
+    markersRef.current.forEach(({ marker }) => marker.remove());
+    markersRef.current.clear();
 
     const filtered = alunos.filter(a => !activeArea || a.area === activeArea);
 
     filtered.forEach(aluno => {
-      const color = AREA_COLORS[aluno.area] || '#ffffff';
-
       const wrapper = document.createElement('div');
       wrapper.style.width = '60px';
       wrapper.style.height = '60px';
@@ -147,7 +145,7 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
       wrapper.appendChild(inner);
 
       wrapper.addEventListener('mouseenter', () => {
-        inner.style.transform = 'scale(1.3)';
+        inner.style.transform = 'scale(1.15)';
         inner.style.boxShadow = '0 0 12px #34d399, 0 0 24px #34d39988';
       });
       wrapper.addEventListener('mouseleave', () => {
@@ -164,7 +162,7 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
         handleMarkerClick(aluno.id);
       });
 
-      markersRef.current.push(marker);
+      markersRef.current.set(aluno.id, { marker, wrapper });
     });
   }, [alunos, activeArea, handleMarkerClick]);
 
@@ -179,11 +177,17 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
         replacingPopupRef.current = false;
         popupRef.current = null;
       }
+      markersRef.current.forEach(({ wrapper }) => {
+        wrapper.style.visibility = 'visible';
+      });
       return;
     }
 
     const aluno = alunos.find(a => a.id === selectedId);
     if (!aluno) return;
+
+    const entry = markersRef.current.get(selectedId);
+    if (entry) entry.wrapper.style.visibility = 'hidden';
 
     if (popupRef.current) {
       popupRef.current.setHTML(loadingCard || !card ? buildLoadingHTML() : buildPopupHTML(card));
@@ -193,9 +197,10 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
     const popup = new mapboxgl.Popup({
       closeButton: true,
       closeOnClick: false,
-      maxWidth: '340px',
+      maxWidth: '380px',
       className: 'aluno-popup',
-      offset: 28,
+      anchor: 'top-left',
+      offset: [-51, -51],
     })
       .setLngLat([aluno.lng, aluno.lat])
       .setHTML(loadingCard || !card ? buildLoadingHTML() : buildPopupHTML(card))
@@ -203,6 +208,7 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
 
     popup.on('close', () => {
       popupRef.current = null;
+      if (entry) entry.wrapper.style.visibility = 'visible';
       if (!replacingPopupRef.current) {
         onClose();
       }
