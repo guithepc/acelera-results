@@ -1,0 +1,1 @@
+ALTER TABLE aluno ADD COLUMN stacks TEXT;

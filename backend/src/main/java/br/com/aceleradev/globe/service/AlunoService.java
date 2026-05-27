@@ -33,11 +33,13 @@ public class AlunoService {
         Aluno aluno          = new Aluno();
         aluno.area           = req.area;
         aluno.gender         = req.gender;
+        aluno.seniority      = req.seniority;
         aluno.city           = req.city;
         aluno.state          = req.state.toUpperCase();
         aluno.salary         = req.salary;
         aluno.firstJobInIt   = req.firstJobInIt;
         aluno.keyInsight     = req.keyInsight;
+        aluno.stacks         = req.stacks;
         aluno.anonymousName  = name;
         aluno.avatarUrl      = avatarUrl;
         aluno.lat            = coords.lat();

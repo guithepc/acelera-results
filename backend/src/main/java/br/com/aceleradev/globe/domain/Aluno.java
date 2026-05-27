@@ -38,6 +38,11 @@ public class Aluno extends PanacheEntityBase {
     @Column(name = "state", nullable = false, columnDefinition = "bpchar(2)")
     public String state;
 
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "seniority", columnDefinition = "aluno_seniority")
+    public AlunoSeniority seniority;
+
     @Column(name = "salary")
     public String salary;
 
@@ -46,6 +51,9 @@ public class Aluno extends PanacheEntityBase {
 
     @Column(name = "key_insight", columnDefinition = "TEXT")
     public String keyInsight;
+
+    @Column(name = "stacks", columnDefinition = "TEXT")
+    public String stacks;
 
     @Column(name = "anonymous_name", nullable = false, length = 80)
     public String anonymousName;
