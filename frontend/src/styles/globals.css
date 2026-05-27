@@ -22,3 +22,30 @@ button {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.aluno-popup .mapboxgl-popup-content {
+  background: rgba(8, 10, 20, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  color: #fff;
+}
+
+.aluno-popup .mapboxgl-popup-tip {
+  border-top-color: rgba(8, 10, 20, 0.95);
+}
+
+.aluno-popup .mapboxgl-popup-close-button {
+  color: #64748b;
+  font-size: 18px;
+  padding: 4px 8px;
+  right: 4px;
+  top: 4px;
+}
+
+.aluno-popup .mapboxgl-popup-close-button:hover {
+  color: #fff;
+  background: transparent;
+}

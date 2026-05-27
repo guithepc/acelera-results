@@ -18,25 +18,32 @@ public class AvatarService {
     private static final Logger LOG = Logger.getLogger(AvatarService.class);
 
     private static final List<String> HEADS = List.of(
-            "afro", "buns", "cornrows", "cornrows2", "dreads", "dreads2",
-            "mohawk", "mohawk2", "shortCurly", "shortFlat", "shortRound",
-            "longBangs", "long", "straight01", "straight02"
+            "afro", "buns", "cornrows", "cornrows2", "dreads1", "dreads2",
+            "mohawk", "mohawk2", "long", "longBangs", "longCurly", "longAfro",
+            "short1", "short2", "short3", "short4", "short5",
+            "medium1", "medium2", "medium3", "mediumBangs", "mediumStraight",
+            "flatTop", "pomp", "bun", "bun2", "twists", "twists2"
     );
     private static final List<String> FACES = List.of(
-            "smile", "cute", "smileLOL", "smileTeeth"
+            "smile", "smileBig", "cute", "smileLOL", "cheeky",
+            "calm", "lovingGrin1", "lovingGrin2", "driven", "awe"
     );
     private static final List<String> ACCESSORIES = List.of(
-            "glasses", "glasses2", "glasses3", "sunglasses", "none", "none"
+            "glasses", "glasses2", "glasses3", "glasses4", "glasses5",
+            "sunglasses", "sunglasses2"
     );
 
-    private static final Map<AlunoArea, String> BG_COLORS = Map.of(
-            AlunoArea.FRONTEND,  "b6d0fb",
-            AlunoArea.BACKEND,   "9fe1cb",
-            AlunoArea.FULLSTACK, "f5c4b3",
-            AlunoArea.MOBILE,    "fac775",
-            AlunoArea.CYBER,     "cecbf6",
-            AlunoArea.DATA,      "d3d1c7",
-            AlunoArea.DEVOPS,    "c0dd97"
+    private static final Map<AlunoArea, String> BG_COLORS = Map.ofEntries(
+            Map.entry(AlunoArea.FRONTEND,       "b6d0fb"),
+            Map.entry(AlunoArea.BACKEND,        "9fe1cb"),
+            Map.entry(AlunoArea.FULLSTACK,      "f5c4b3"),
+            Map.entry(AlunoArea.MOBILE,         "fac775"),
+            Map.entry(AlunoArea.CYBER,          "cecbf6"),
+            Map.entry(AlunoArea.DATA,           "d3d1c7"),
+            Map.entry(AlunoArea.DEVOPS,         "c0dd97"),
+            Map.entry(AlunoArea.QA,             "f9a8d4"),
+            Map.entry(AlunoArea.IA_AUTOMACOES,  "a7f3d0"),
+            Map.entry(AlunoArea.SUPORTE,        "fda4af")
     );
 
     public String generate(String anonymousName, AlunoGender gender, AlunoArea area) {
@@ -50,7 +57,7 @@ public class AvatarService {
 
         String facialHair = "";
         if (gender == AlunoGender.MALE && rnd.nextInt(10) < 4) {
-            facialHair = "&facialHair=beard,beardMustache";
+            facialHair = "&facialHair=full,goatee1,moustache1";
         }
 
         LOG.info("Avatar URL generated successfully");

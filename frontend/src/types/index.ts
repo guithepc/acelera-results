@@ -5,7 +5,10 @@ export type AlunoArea =
   | 'MOBILE'
   | 'CYBER'
   | 'DATA'
-  | 'DEVOPS';
+  | 'DEVOPS'
+  | 'QA'
+  | 'IA_AUTOMACOES'
+  | 'SUPORTE';
 
 export type AlunoGender = 'MALE' | 'FEMALE' | 'OTHER';
 

@@ -12,16 +12,15 @@ public class AlunoService {
 
     private static final Logger LOG = Logger.getLogger(AlunoService.class);
 
-    @Inject NicknameService  nicknameService;
     @Inject AvatarService    avatarService;
     @Inject GeocodingService geocodingService;
 
     public Aluno create(CreateAlunoRequest req) {
         LOG.infof("Starting new student registration: area=%s, city=%s, state=%s", req.area, req.city, req.state);
 
-        String name = nicknameService.generate(req.gender);
+        String name = req.anonymousName;
         String avatarUrl = avatarService.generate(name, req.gender, req.area);
-        GeocodingService.Coords coords = geocodingService.geocode(req.city, req.state);
+        GeocodingService.Coords coords = geocodingService.geocode(req.city, req.state, req.neighborhood);
 
         Aluno aluno = persist(req, name, avatarUrl, coords);
         LOG.infof("Student registered successfully: id=%s, name=%s", aluno.id, aluno.anonymousName);
