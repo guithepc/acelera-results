@@ -13,5 +13,6 @@ public record AlunoCardDTO(
         String salary,
         Boolean firstJobInIt,
         String keyInsight,
-        String stacks
+        String stacks,
+        String courseTime
 ) {}

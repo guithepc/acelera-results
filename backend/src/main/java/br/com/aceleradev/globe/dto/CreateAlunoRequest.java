@@ -38,5 +38,7 @@ public class CreateAlunoRequest {
 
     public String stacks;
 
+    public String courseTime;
+
     public String neighborhood;
 }

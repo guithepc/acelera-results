@@ -55,6 +55,9 @@ public class Aluno extends PanacheEntityBase {
     @Column(name = "stacks", columnDefinition = "TEXT")
     public String stacks;
 
+    @Column(name = "course_time", length = 50)
+    public String courseTime;
+
     @Column(name = "anonymous_name", nullable = false, length = 80)
     public String anonymousName;
 

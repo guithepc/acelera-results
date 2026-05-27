@@ -40,6 +40,7 @@ public class AlunoService {
         aluno.firstJobInIt   = req.firstJobInIt;
         aluno.keyInsight     = req.keyInsight;
         aluno.stacks         = req.stacks;
+        aluno.courseTime      = req.courseTime;
         aluno.anonymousName  = name;
         aluno.avatarUrl      = avatarUrl;
         aluno.lat            = coords.lat();

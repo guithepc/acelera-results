@@ -65,6 +65,7 @@ public class AdminAlunoResource {
         a.firstJobInIt = req.firstJobInIt;
         a.keyInsight   = req.keyInsight;
         a.stacks       = req.stacks;
+        a.courseTime    = req.courseTime;
         return Response.ok(toAdminDTO(a)).build();
     }
 
@@ -94,6 +95,6 @@ public class AdminAlunoResource {
     private AlunoAdminDTO toAdminDTO(Aluno a) {
         return new AlunoAdminDTO(a.id, a.anonymousName, a.avatarUrl,
                 a.area, a.gender, a.seniority, a.city, a.state, a.salary,
-                a.firstJobInIt, a.keyInsight, a.stacks, a.lat, a.lng, a.createdAt);
+                a.firstJobInIt, a.keyInsight, a.stacks, a.courseTime, a.lat, a.lng, a.createdAt);
     }
 }

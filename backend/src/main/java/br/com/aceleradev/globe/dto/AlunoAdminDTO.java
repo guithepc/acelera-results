@@ -20,6 +20,7 @@ public record AlunoAdminDTO(
         Boolean firstJobInIt,
         String keyInsight,
         String stacks,
+        String courseTime,
         Double lat,
         Double lng,
         LocalDateTime createdAt

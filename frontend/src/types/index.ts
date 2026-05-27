@@ -41,6 +41,7 @@ export interface AlunoCard {
   firstJobInIt: boolean;
   keyInsight: string;
   stacks: string | null;
+  courseTime: string | null;
 }
 
 export interface AlunoAdmin extends AlunoCard {

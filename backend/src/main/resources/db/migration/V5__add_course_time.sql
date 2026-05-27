@@ -1,0 +1,1 @@
+ALTER TABLE aluno ADD COLUMN course_time VARCHAR(50);
