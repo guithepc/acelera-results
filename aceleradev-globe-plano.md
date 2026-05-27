@@ -808,7 +808,7 @@ export default function App() {
 ### 2.11 `.env` (frontend)
 
 ```env
-VITE_MAPBOX_TOKEN=pk.eyJ1IjoicGN0aGVvbmUiLCJhIjoiY21wbnltdjJ3MDBkMzJycGVjbWZvd2lrYiJ9.miD0U4T-xS50-UT1vWk9fw
+VITE_MAPBOX_TOKEN=<seu-token-mapbox>
 VITE_API_URL=http://localhost:8080
 ```
 
