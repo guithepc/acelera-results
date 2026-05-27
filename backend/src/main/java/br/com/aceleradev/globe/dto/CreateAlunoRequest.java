@@ -29,4 +29,9 @@ public class CreateAlunoRequest {
 
     @NotBlank
     public String keyInsight;
+
+    @NotBlank
+    public String anonymousName;
+
+    public String neighborhood;
 }

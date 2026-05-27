@@ -35,9 +35,11 @@ public class GeocodingService {
 
     public record Coords(double lat, double lng) {}
 
-    public Coords geocode(String city, String state) {
-        LOG.infof("Geocoding address: city=%s, state=%s", city, state);
-        String query = city + ", " + state + ", Brasil";
+    public Coords geocode(String city, String state, String neighborhood) {
+        LOG.infof("Geocoding address: city=%s, state=%s, neighborhood=%s", city, state, neighborhood);
+        String query = (neighborhood != null && !neighborhood.isBlank())
+                ? neighborhood + ", " + city + ", " + state
+                : city + ", " + state;
         String url = "https://nominatim.openstreetmap.org/search"
                 + "?q=" + URLEncoder.encode(query, StandardCharsets.UTF_8)
                 + "&format=json&limit=1";
@@ -69,10 +71,9 @@ public class GeocodingService {
             double lat = Double.parseDouble(loc.get("lat").asText());
             double lng = Double.parseDouble(loc.get("lon").asText());
 
-            // offset aleatório de bairro: ~0.01° a 0.04° (~1km a 4km)
             Random rnd = new Random();
-            double offsetLat = (rnd.nextDouble() * 0.03 + 0.01) * (rnd.nextBoolean() ? 1: -1);
-            double offsetLng = (rnd.nextDouble() * 0.03 + 0.01) * (rnd.nextBoolean() ? 1: -1);
+            double offsetLat = (rnd.nextDouble() * 0.003 + 0.001) * (rnd.nextBoolean() ? 1 : -1);
+            double offsetLng = (rnd.nextDouble() * 0.003 + 0.001) * (rnd.nextBoolean() ? 1 : -1);
 
             LOG.infof("Geocoding resolved: lat=%.4f, lng=%.4f", lat + offsetLat, lng + offsetLng);
             return new Coords(lat + offsetLat, lng + offsetLng);

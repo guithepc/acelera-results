@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import GlobeScene from '../components/Globe/GlobeScene';
-import AlunoCard from '../components/UI/AlunoCard';
+import MapboxGlobe from '../components/Globe/MapboxGlobe';
 import StatsCounter from '../components/UI/StatsCounter';
 import FilterBar from '../components/UI/FilterBar';
 import LoadingScreen from '../components/UI/LoadingScreen';
@@ -13,7 +12,7 @@ export default function GlobePage() {
   const [activeArea, setActiveArea] = useState<string | null>(null);
 
   const { data: alunos, isLoading: loadingGlobe } = useAlunos();
-  const { data: card,   isFetching: loadingCard } = useAlunoCard(selectedId);
+  const { data: card, isFetching: loadingCard } = useAlunoCard(selectedId);
   const { data: stats } = useStats();
 
   if (loadingGlobe) return <LoadingScreen />;
@@ -21,22 +20,19 @@ export default function GlobePage() {
   return (
     <div style={{
       width: '100vw', height: '100vh', overflow: 'hidden',
-      background: 'radial-gradient(ellipse at center, #0a0f1e 0%, #020408 100%)',
       position: 'relative',
     }}>
-      <StatsCounter stats={stats} />
-
-      <GlobeScene
+      <MapboxGlobe
         alunos={alunos || []}
         activeArea={activeArea}
         onMarkerClick={setSelectedId}
-      />
-
-      <AlunoCard
-        aluno={card || null}
-        loading={loadingCard}
+        selectedId={selectedId}
+        card={card || null}
+        loadingCard={loadingCard}
         onClose={() => setSelectedId(null)}
       />
+
+      <StatsCounter stats={stats} />
 
       <FilterBar
         activeArea={activeArea}
