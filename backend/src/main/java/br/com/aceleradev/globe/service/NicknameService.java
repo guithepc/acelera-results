@@ -10,6 +10,8 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import org.jboss.logging.Logger;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -18,6 +20,8 @@ import java.time.Duration;
 
 @ApplicationScoped
 public class NicknameService {
+
+    private static final Logger LOG = Logger.getLogger(NicknameService.class);
 
     @ConfigProperty(name = "anthropic.api.key")
     String apiKey;
@@ -30,6 +34,7 @@ public class NicknameService {
             .build();
 
     public String generate(AlunoGender gender) {
+        LOG.infof("Generating nickname via Anthropic API: gender=%s", gender);
         if (apiKey == null || apiKey.isBlank()) {
             throw new WebApplicationException(
                     "ANTHROPIC_API_KEY não configurada", 500);
@@ -72,19 +77,24 @@ public class NicknameService {
                     .build();
 
             HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
+            LOG.infof("Anthropic API responded: status=%d", resp.statusCode());
 
             if (resp.statusCode() / 100 != 2) {
+                LOG.errorf("Anthropic API error: status=%d, body=%s", resp.statusCode(), resp.body());
                 throw new WebApplicationException(
                         "Falha na Claude API: " + resp.statusCode() + " " + resp.body(), 502);
             }
 
             JsonNode json = mapper.readTree(resp.body());
             String text = json.path("content").path(0).path("text").asText();
-            return text == null ? "" : text.trim();
+            String nickname = text == null ? "": text.trim();
+            LOG.infof("Nickname generated: name=%s", nickname);
+            return nickname;
 
         } catch (WebApplicationException e) {
             throw e;
         } catch (Exception e) {
+            LOG.errorf("Anthropic API call failed: error=%s", e.getMessage());
             throw new WebApplicationException("Erro ao chamar Claude API: " + e.getMessage(), 502);
         }
     }

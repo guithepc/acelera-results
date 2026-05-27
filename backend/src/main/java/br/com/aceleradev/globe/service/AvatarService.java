@@ -4,6 +4,8 @@ import br.com.aceleradev.globe.domain.AlunoArea;
 import br.com.aceleradev.globe.domain.AlunoGender;
 import jakarta.enterprise.context.ApplicationScoped;
 
+import org.jboss.logging.Logger;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.Random;
 
 @ApplicationScoped
 public class AvatarService {
+
+    private static final Logger LOG = Logger.getLogger(AvatarService.class);
 
     private static final List<String> HEADS = List.of(
             "afro", "buns", "cornrows", "cornrows2", "dreads", "dreads2",
@@ -36,6 +40,7 @@ public class AvatarService {
     );
 
     public String generate(String anonymousName, AlunoGender gender, AlunoArea area) {
+        LOG.infof("Generating avatar: name=%s, gender=%s, area=%s", anonymousName, gender, area);
         Random rnd = new Random(anonymousName.hashCode());
 
         String head      = pick(HEADS, rnd);
@@ -48,6 +53,7 @@ public class AvatarService {
             facialHair = "&facialHair=beard,beardMustache";
         }
 
+        LOG.info("Avatar URL generated successfully");
         return "https://api.dicebear.com/9.x/open-peeps/svg"
                 + "?seed="            + encode(anonymousName)
                 + "&head="            + head
