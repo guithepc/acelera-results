@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import MapboxGlobe from '../components/Globe/MapboxGlobe';
+
 import StatsCounter from '../components/UI/StatsCounter';
 import FilterBar from '../components/UI/FilterBar';
 import LoadingScreen from '../components/UI/LoadingScreen';
+import FloatingStatsPanel from '../components/UI/FloatingStatsPanel'; // <-- IMPORT ADICIONADO
 import { useAlunos } from '../hooks/useAlunos';
 import { useAlunoCard } from '../hooks/useAlunoCard';
 import { useStats } from '../hooks/useStats';
@@ -31,6 +33,9 @@ export default function GlobePage() {
         loadingCard={loadingCard}
         onClose={() => setSelectedId(null)}
       />
+
+      {/* PAINEL FLUTUANTE ADICIONADO AQUI */}
+      <FloatingStatsPanel />
 
       <StatsCounter stats={stats} />
 

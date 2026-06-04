@@ -4,6 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import type { AlunoGlobe, AlunoCard } from '../../types';
 import { AREA_COLORS, AREA_LABELS, SENIORITY_LABELS } from '../../lib/colors';
 
+// AQUI ESTÁ A INJEÇÃO DA CHAVE DO MAPBOX (Lida do arquivo .env)
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 interface Props {
