@@ -91,6 +91,7 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
   const popupRef = useRef<mapboxgl.Popup | null>(null);
   const popupAlunoIdRef = useRef<string | null>(null);
   const replacingPopupRef = useRef(false);
+  const spinningRef = useRef(true);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -98,8 +99,8 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
     const map = new mapboxgl.Map({
       container: containerRef.current,
       style: 'mapbox://styles/mapbox/dark-v11',
-      center: [-9.14, 38.74],
-      zoom: 11,
+      center: [-20, 5],
+      zoom: 2,
       projection: 'globe',
       attributionControl: false,
     });
@@ -116,9 +117,25 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
 
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
 
+    spinningRef.current = true;
+
+    const spinInterval = setInterval(() => {
+      if (!spinningRef.current) return;
+      const center = map.getCenter();
+      map.jumpTo({ center: [center.lng - 0.08, center.lat] });
+    }, 16);
+
+    const stopSpin = () => {
+      spinningRef.current = false;
+    };
+    map.on('mousedown', stopSpin);
+    map.on('touchstart', stopSpin);
+
     mapRef.current = map;
 
     return () => {
+      spinningRef.current = false;
+      clearInterval(spinInterval);
       map.remove();
       mapRef.current = null;
     };
@@ -178,6 +195,7 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
 
       wrapper.addEventListener('click', (e) => {
         e.stopPropagation();
+        spinningRef.current = false;
         handleMarkerClick(aluno.id);
       });
 
