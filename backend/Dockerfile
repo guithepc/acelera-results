@@ -7,7 +7,7 @@ COPY src ./src
 RUN mvn -B -q package -DskipTests
 
 # ---- runtime ----
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /work
 COPY --from=build /app/target/quarkus-app/lib/      /work/lib/
 COPY --from=build /app/target/quarkus-app/*.jar     /work/
