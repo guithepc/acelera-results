@@ -2,3 +2,4 @@
 volumes/
 *.log
 .DS_Store
+.maestri/

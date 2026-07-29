@@ -1,20 +1,74 @@
-# 🌍 AceleraDev Globe
+# AceleraDev Globe
 
-Um globo 3D interativo que mostra onde estão os devs que passaram pelo **AceleraDev** — o método de aceleração de carreira em tech criado pelo [Guilherme Pessoa (PC)](https://www.linkedin.com/in/pctheone).
+<p align="center">
+  <img src="docs/globe-preview.png" alt="AceleraDev Globe — Interactive 3D map showing developers across the world" width="100%" />
+</p>
 
-Cada ponto no mapa representa um dev real que acelerou sua carreira: trocou de emprego, conquistou o primeiro trampo em TI, migrou de área ou deu um salto de salário. Tudo anonimizado, com avatares gerados e nomes fictícios — mas os resultados são reais.
+An interactive 3D globe that visualizes real career outcomes from [AceleraDev](https://aceleradev.com.br) — a tech career acceleration program. Each marker on the map represents a real developer who landed their first tech job, switched careers, or achieved a significant salary increase. All data is anonymized with generated avatars and fictional names, but the results are real.
 
-## O que você vai ver
+## Features
 
-- **Globo interativo** — navegue pelo mapa e veja devs espalhados pelo Brasil (e pelo mundo)
-- **Filtro por área** — Frontend, Backend, Fullstack, Mobile, Cyber, Data, DevOps
-- **Card individual** — clique em um marcador e veja a história daquele dev: área, cidade, faixa salarial e o insight que ele leva da jornada
-- **Contador ao vivo** — quantos devs já passaram pelo programa e em quantos estados estão presentes
+- **Interactive 3D Globe** — built with Mapbox GL JS, navigate and explore developers across Brazil and worldwide
+- **Filter by Area** — Frontend, Backend, Fullstack, Mobile, Cybersecurity, Data, DevOps, QA, AI/Automation, Support
+- **Developer Cards** — click any marker to see individual stories: area, city, seniority, salary range, and key career insights
+- **Live Stats** — real-time counters for total developers and states represented
 
-## Por que isso existe
+## Tech Stack
 
-O AceleraDev não é curso de programação. É posicionamento, currículo, LinkedIn, entrevista — a parte que ninguém ensina. Esse globo é a prova visual de que o método funciona: gente real, em cidades reais, com resultados reais.
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS, Mapbox GL JS |
+| Backend | Java 17, Quarkus 3.9, Hibernate ORM, Flyway |
+| Database | PostgreSQL 16 |
+| Infrastructure | Docker, Traefik v3, Coraza WAF, Let's Encrypt |
 
----
+## Architecture
 
-Feito com café, código e a comunidade do [AceleraDev](https://aceleradev.com.br).
+```
+Browser → Traefik (TLS + WAF + Rate Limit) → Frontend (Nginx)
+                                            → Backend (Quarkus) → PostgreSQL
+```
+
+- **Traefik** handles TLS termination, rate limiting (20 req/s per IP), security headers, and WAF (Coraza + OWASP CRS)
+- **Frontend** is a static SPA served by Nginx, renders the 3D globe with Mapbox
+- **Backend** exposes a REST API with cache (Caffeine), admin authentication, and automatic database migrations via Flyway
+- **Avatars** are dynamically generated using DiceBear based on developer profile
+- **Geocoding** uses Nominatim for coordinate resolution with randomized offset for privacy
+
+## Running Locally
+
+```bash
+# 1. Start the database
+docker compose up -d
+
+# 2. Start the backend
+cd backend
+mvn quarkus:dev
+
+# 3. Start the frontend
+cd frontend
+npm install
+npm run dev
+```
+
+Create a `.env` file in `frontend/` with your Mapbox token:
+```
+VITE_MAPBOX_TOKEN=pk.your_token_here
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/students` | List all students (globe markers) |
+| GET | `/api/students/{id}` | Get student details (card) |
+| GET | `/api/students/stats` | Get total students and states count |
+| POST | `/api/admin/students` | Create student (admin) |
+| PUT | `/api/admin/students/{id}` | Update student (admin) |
+| DELETE | `/api/admin/students/{id}` | Delete student (admin) |
+
+Admin endpoints require `X-Admin-Token` header.
+
+## License
+
+MIT
