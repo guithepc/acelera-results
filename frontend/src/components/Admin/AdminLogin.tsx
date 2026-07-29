@@ -13,7 +13,7 @@ export default function AdminLogin({ onLogin }: Props) {
     setLoading(true);
     try {
       sessionStorage.setItem('admin-token', token);
-      await adminApi.get('/api/admin/alunos');
+      await adminApi.get('/api/admin/students');
       onLogin();
     } catch {
       setError(true);

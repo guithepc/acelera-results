@@ -6,7 +6,7 @@
 
     <groupId>br.com.aceleradev</groupId>
     <artifactId>aceleradev-globe-api</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
 
     <properties>
         <compiler-plugin.version>3.13.0</compiler-plugin.version>

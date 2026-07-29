@@ -1,19 +1,19 @@
 package br.com.aceleradev.globe.dto;
 
-import br.com.aceleradev.globe.domain.AlunoArea;
-import br.com.aceleradev.globe.domain.AlunoGender;
-import br.com.aceleradev.globe.domain.AlunoSeniority;
+import br.com.aceleradev.globe.domain.StudentArea;
+import br.com.aceleradev.globe.domain.StudentGender;
+import br.com.aceleradev.globe.domain.StudentSeniority;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record AlunoAdminDTO(
+public record StudentAdminDTO(
         UUID id,
         String anonymousName,
         String avatarUrl,
-        AlunoArea area,
-        AlunoGender gender,
-        AlunoSeniority seniority,
+        StudentArea area,
+        StudentGender gender,
+        StudentSeniority seniority,
         String city,
         String state,
         String salary,

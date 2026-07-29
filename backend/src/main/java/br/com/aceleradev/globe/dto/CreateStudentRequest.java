@@ -1,21 +1,21 @@
 package br.com.aceleradev.globe.dto;
 
-import br.com.aceleradev.globe.domain.AlunoArea;
-import br.com.aceleradev.globe.domain.AlunoGender;
-import br.com.aceleradev.globe.domain.AlunoSeniority;
+import br.com.aceleradev.globe.domain.StudentArea;
+import br.com.aceleradev.globe.domain.StudentGender;
+import br.com.aceleradev.globe.domain.StudentSeniority;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class CreateAlunoRequest {
+public class CreateStudentRequest {
 
     @NotNull
-    public AlunoArea area;
+    public StudentArea area;
 
     @NotNull
-    public AlunoGender gender;
+    public StudentGender gender;
 
-    public AlunoSeniority seniority;
+    public StudentSeniority seniority;
 
     @NotBlank
     public String city;
@@ -32,9 +32,6 @@ public class CreateAlunoRequest {
 
     @NotBlank
     public String keyInsight;
-
-    @NotBlank
-    public String anonymousName;
 
     public String stacks;
 

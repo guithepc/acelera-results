@@ -3,16 +3,16 @@ import MapboxGlobe from '../components/Globe/MapboxGlobe';
 import StatsCounter from '../components/UI/StatsCounter';
 import FilterBar from '../components/UI/FilterBar';
 import LoadingScreen from '../components/UI/LoadingScreen';
-import { useAlunos } from '../hooks/useAlunos';
-import { useAlunoCard } from '../hooks/useAlunoCard';
+import { useStudents } from '../hooks/useStudents';
+import { useStudentCard } from '../hooks/useStudentCard';
 import { useStats } from '../hooks/useStats';
 
 export default function GlobePage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeArea, setActiveArea] = useState<string | null>(null);
 
-  const { data: alunos, isLoading: loadingGlobe } = useAlunos();
-  const { data: card, isFetching: loadingCard } = useAlunoCard(selectedId);
+  const { data: students, isLoading: loadingGlobe } = useStudents();
+  const { data: card, isFetching: loadingCard } = useStudentCard(selectedId);
   const { data: stats } = useStats();
 
   if (loadingGlobe) return <LoadingScreen />;
@@ -23,7 +23,7 @@ export default function GlobePage() {
       position: 'relative',
     }}>
       <MapboxGlobe
-        alunos={alunos || []}
+        students={students || []}
         activeArea={activeArea}
         onMarkerClick={setSelectedId}
         selectedId={selectedId}

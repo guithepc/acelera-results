@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "aluno")
-public class Aluno extends PanacheEntityBase {
+public class Student extends PanacheEntityBase {
 
     @Id
     @GeneratedValue
@@ -25,12 +25,12 @@ public class Aluno extends PanacheEntityBase {
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "area", columnDefinition = "aluno_area")
-    public AlunoArea area;
+    public StudentArea area;
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "gender", columnDefinition = "aluno_gender")
-    public AlunoGender gender;
+    public StudentGender gender;
 
     @Column(name = "city", nullable = false)
     public String city;
@@ -41,7 +41,7 @@ public class Aluno extends PanacheEntityBase {
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "seniority", columnDefinition = "aluno_seniority")
-    public AlunoSeniority seniority;
+    public StudentSeniority seniority;
 
     @Column(name = "salary")
     public String salary;

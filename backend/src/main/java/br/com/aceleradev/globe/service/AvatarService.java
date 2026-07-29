@@ -1,7 +1,7 @@
 package br.com.aceleradev.globe.service;
 
-import br.com.aceleradev.globe.domain.AlunoArea;
-import br.com.aceleradev.globe.domain.AlunoGender;
+import br.com.aceleradev.globe.domain.StudentArea;
+import br.com.aceleradev.globe.domain.StudentGender;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import org.jboss.logging.Logger;
@@ -33,20 +33,20 @@ public class AvatarService {
             "sunglasses", "sunglasses2"
     );
 
-    private static final Map<AlunoArea, String> BG_COLORS = Map.ofEntries(
-            Map.entry(AlunoArea.FRONTEND,       "b6d0fb"),
-            Map.entry(AlunoArea.BACKEND,        "9fe1cb"),
-            Map.entry(AlunoArea.FULLSTACK,      "f5c4b3"),
-            Map.entry(AlunoArea.MOBILE,         "fac775"),
-            Map.entry(AlunoArea.CYBER,          "cecbf6"),
-            Map.entry(AlunoArea.DATA,           "d3d1c7"),
-            Map.entry(AlunoArea.DEVOPS,         "c0dd97"),
-            Map.entry(AlunoArea.QA,             "f9a8d4"),
-            Map.entry(AlunoArea.IA_AUTOMACOES,  "a7f3d0"),
-            Map.entry(AlunoArea.SUPORTE,        "fda4af")
+    private static final Map<StudentArea, String> BG_COLORS = Map.ofEntries(
+            Map.entry(StudentArea.FRONTEND,       "b6d0fb"),
+            Map.entry(StudentArea.BACKEND,        "9fe1cb"),
+            Map.entry(StudentArea.FULLSTACK,      "f5c4b3"),
+            Map.entry(StudentArea.MOBILE,         "fac775"),
+            Map.entry(StudentArea.CYBER,          "cecbf6"),
+            Map.entry(StudentArea.DATA,           "d3d1c7"),
+            Map.entry(StudentArea.DEVOPS,         "c0dd97"),
+            Map.entry(StudentArea.QA,             "f9a8d4"),
+            Map.entry(StudentArea.IA_AUTOMACOES,  "a7f3d0"),
+            Map.entry(StudentArea.SUPORTE,        "fda4af")
     );
 
-    public String generate(String anonymousName, AlunoGender gender, AlunoArea area) {
+    public String generate(String anonymousName, StudentGender gender, StudentArea area) {
         LOG.infof("Generating avatar: name=%s, gender=%s, area=%s", anonymousName, gender, area);
         Random rnd = new Random(anonymousName.hashCode());
 
@@ -56,7 +56,7 @@ public class AvatarService {
         String bg        = BG_COLORS.get(area);
 
         String facialHair = "";
-        if (gender == AlunoGender.MALE && rnd.nextInt(10) < 4) {
+        if (gender == StudentGender.MALE && rnd.nextInt(10) < 4) {
             facialHair = "&facialHair=full,goatee1,moustache1";
         }
 

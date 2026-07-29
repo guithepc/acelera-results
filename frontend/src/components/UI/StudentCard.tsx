@@ -1,19 +1,19 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import type { AlunoCard as AlunoCardType } from '../../types';
+import type { StudentCard as StudentCardType } from '../../types';
 import { AREA_COLORS, AREA_LABELS } from '../../lib/colors';
 
 interface Props {
-  aluno: AlunoCardType | null;
+  student: StudentCardType | null;
   onClose: () => void;
   loading: boolean;
 }
 
-export default function AlunoCard({ aluno, onClose, loading }: Props) {
-  const areaColor = aluno ? AREA_COLORS[aluno.area] : '#ffffff';
+export default function StudentCard({ student, onClose, loading }: Props) {
+  const areaColor = student ? AREA_COLORS[student.area] : '#ffffff';
 
   return (
     <AnimatePresence>
-      {(aluno || loading) && (
+      {(student || loading) && (
         <motion.div
           key="card"
           initial={{ opacity: 0, x: 60, scale: 0.95 }}
@@ -40,7 +40,7 @@ export default function AlunoCard({ aluno, onClose, loading }: Props) {
                 <div style={{ height: 14, background: '#1a2030', borderRadius: 6, width: '60%', margin: '0 auto 16px' }} />
                 <div style={{ height: 60, background: '#1a2030', borderRadius: 6 }} />
               </div>
-            ) : aluno && (
+            ) : student && (
               <>
                 <button
                   onClick={onClose}
@@ -56,8 +56,8 @@ export default function AlunoCard({ aluno, onClose, loading }: Props) {
 
                 <div style={{ textAlign: 'center', marginBottom: 16 }}>
                   <img
-                    src={aluno.avatarUrl}
-                    alt={aluno.anonymousName}
+                    src={student.avatarUrl}
+                    alt={student.anonymousName}
                     style={{
                       width: 80, height: 80, borderRadius: '50%',
                       display: 'inline-block',
@@ -76,14 +76,14 @@ export default function AlunoCard({ aluno, onClose, loading }: Props) {
                   marginTop: 0,
                   lineHeight: 1.6,
                 }}>
-                  {aluno.anonymousName}
+                  {student.anonymousName}
                 </h3>
 
                 <p style={{
                   textAlign: 'center', color: '#64748b',
                   fontSize: 12, marginBottom: 16, marginTop: 0,
                 }}>
-                  {aluno.city}, {aluno.state}
+                  {student.city}, {student.state}
                 </p>
 
                 <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginBottom: 16, flexWrap: 'wrap' }}>
@@ -94,9 +94,9 @@ export default function AlunoCard({ aluno, onClose, loading }: Props) {
                     padding: '3px 10px', borderRadius: 20,
                     fontSize: 11, fontWeight: 600,
                   }}>
-                    {AREA_LABELS[aluno.area]}
+                    {AREA_LABELS[student.area]}
                   </span>
-                  {aluno.firstJobInIt && (
+                  {student.firstJobInIt && (
                     <span style={{
                       background: 'rgba(251,191,36,0.15)',
                       color: '#fbbf24',
@@ -117,7 +117,7 @@ export default function AlunoCard({ aluno, onClose, loading }: Props) {
                 }}>
                   <span style={{ color: '#64748b', fontSize: 12 }}>Salário</span>
                   <span style={{ color: '#ffffff', fontSize: 13, fontWeight: 600 }}>
-                    {aluno.salary}
+                    {student.salary}
                   </span>
                 </div>
 
@@ -126,8 +126,8 @@ export default function AlunoCard({ aluno, onClose, loading }: Props) {
                   borderRadius: 8, padding: '12px',
                   borderLeft: `3px solid ${areaColor}`,
                 }}>
-                  <p style={{ color: '#94a3b8', fontSize: 11, lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>
-                    "{aluno.keyInsight}"
+                  <p style={{ color: '#94a3b8', fontSize: 15, lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>
+                    "{student.keyInsight}"
                   </p>
                 </div>
               </>

@@ -2,7 +2,7 @@ package br.com.aceleradev.globe.dto;
 
 import java.util.UUID;
 
-public record AlunoCardDTO(
+public record StudentCardDTO(
         UUID id,
         String anonymousName,
         String avatarUrl,

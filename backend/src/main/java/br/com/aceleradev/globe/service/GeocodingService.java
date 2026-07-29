@@ -58,13 +58,13 @@ public class GeocodingService {
             if (resp.statusCode() / 100 != 2) {
                 LOG.errorf("Nominatim API error: status=%d", resp.statusCode());
                 throw new WebApplicationException(
-                        "Falha no Nominatim: " + resp.statusCode(), 502);
+                        "Nominatim API failed: " + resp.statusCode(), 502);
             }
 
             JsonNode arr = mapper.readTree(resp.body());
             if (!arr.isArray() || arr.isEmpty()) {
                 LOG.warnf("City not found: query=%s", query);
-                throw new WebApplicationException("Cidade não encontrada: " + query, 422);
+                throw new WebApplicationException("City not found: " + query, 422);
             }
 
             JsonNode loc = arr.get(0);
@@ -82,7 +82,7 @@ public class GeocodingService {
             throw e;
         } catch (Exception e) {
             LOG.errorf("Geocoding call failed: error=%s", e.getMessage());
-            throw new WebApplicationException("Erro no geocoding: " + e.getMessage(), 502);
+            throw new WebApplicationException("Geocoding error: " + e.getMessage(), 502);
         }
     }
 }

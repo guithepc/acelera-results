@@ -1,5 +1,5 @@
 package br.com.aceleradev.globe.domain;
 
-public enum AlunoSeniority {
+public enum StudentSeniority {
     TRAINEE, ESTAGIO, JUNIOR, PLENO, SENIOR, ASSISTENTE
 }

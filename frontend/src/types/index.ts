@@ -1,4 +1,4 @@
-export type AlunoArea =
+export type StudentArea =
   | 'FRONTEND'
   | 'BACKEND'
   | 'FULLSTACK'
@@ -10,18 +10,18 @@ export type AlunoArea =
   | 'IA_AUTOMACOES'
   | 'SUPORTE';
 
-export type AlunoGender = 'MALE' | 'FEMALE' | 'OTHER';
+export type StudentGender = 'MALE' | 'FEMALE' | 'OTHER';
 
-export interface AlunoGlobe {
+export interface StudentGlobe {
   id: string;
   anonymousName: string;
-  area: AlunoArea;
+  area: StudentArea;
   lat: number;
   lng: number;
   avatarUrl: string;
 }
 
-export type AlunoSeniority =
+export type StudentSeniority =
   | 'TRAINEE'
   | 'ESTAGIO'
   | 'JUNIOR'
@@ -29,12 +29,12 @@ export type AlunoSeniority =
   | 'SENIOR'
   | 'ASSISTENTE';
 
-export interface AlunoCard {
+export interface StudentCard {
   id: string;
   anonymousName: string;
   avatarUrl: string;
-  area: AlunoArea;
-  seniority: AlunoSeniority | null;
+  area: StudentArea;
+  seniority: StudentSeniority | null;
   city: string;
   state: string;
   salary: string;
@@ -44,8 +44,8 @@ export interface AlunoCard {
   courseTime: string | null;
 }
 
-export interface AlunoAdmin extends AlunoCard {
-  gender: AlunoGender;
+export interface StudentAdmin extends StudentCard {
+  gender: StudentGender;
   lat: number;
   lng: number;
   createdAt: string;
@@ -56,9 +56,9 @@ export interface Stats {
   states: number;
 }
 
-export interface CreateAlunoRequest {
-  area: AlunoArea;
-  gender: AlunoGender;
+export interface CreateStudentRequest {
+  area: StudentArea;
+  gender: StudentGender;
   city: string;
   state: string;
   salary: string;

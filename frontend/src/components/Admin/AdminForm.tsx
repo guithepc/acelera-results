@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import type { AlunoAdmin, AlunoArea, AlunoGender, CreateAlunoRequest } from '../../types';
+import type { StudentAdmin, StudentArea, StudentGender, CreateStudentRequest } from '../../types';
 import { AREA_LABELS } from '../../lib/colors';
 import { adminApi } from '../../lib/api';
 
 interface Props {
-  initial?: AlunoAdmin | null;
-  onSaved: (a: AlunoAdmin) => void;
+  initial?: StudentAdmin | null;
+  onSaved: (s: StudentAdmin) => void;
   onCancel: () => void;
 }
 
-const EMPTY: CreateAlunoRequest = {
+const EMPTY: CreateStudentRequest = {
   area: 'BACKEND',
   gender: 'MALE',
   city: '',
@@ -19,14 +19,14 @@ const EMPTY: CreateAlunoRequest = {
   keyInsight: '',
 };
 
-const GENDER_LABELS: Record<AlunoGender, string> = {
+const GENDER_LABELS: Record<StudentGender, string> = {
   MALE: 'Masculino',
   FEMALE: 'Feminino',
   OTHER: 'Outro',
 };
 
 export default function AdminForm({ initial, onSaved, onCancel }: Props) {
-  const [form, setForm] = useState<CreateAlunoRequest>(
+  const [form, setForm] = useState<CreateStudentRequest>(
     initial
       ? {
           area: initial.area,
@@ -49,8 +49,8 @@ export default function AdminForm({ initial, onSaved, onCancel }: Props) {
     setError(null);
     try {
       const resp = isEdit
-        ? await adminApi.put<AlunoAdmin>(`/api/admin/alunos/${initial!.id}`, form)
-        : await adminApi.post<AlunoAdmin>('/api/admin/alunos', form);
+        ? await adminApi.put<StudentAdmin>(`/api/admin/students/${initial!.id}`, form)
+        : await adminApi.post<StudentAdmin>('/api/admin/students', form);
       onSaved(resp.data);
     } catch (e: any) {
       setError(e?.response?.data?.error || e?.message || 'Erro ao salvar');
@@ -75,7 +75,7 @@ export default function AdminForm({ initial, onSaved, onCancel }: Props) {
     color: '#ffffff', fontSize: 14, outline: 'none', boxSizing: 'border-box',
   };
 
-  const areas = Object.keys(AREA_LABELS) as AlunoArea[];
+  const areas = Object.keys(AREA_LABELS) as StudentArea[];
 
   return (
     <div style={{
@@ -90,7 +90,7 @@ export default function AdminForm({ initial, onSaved, onCancel }: Props) {
       {field('Área', (
         <select
           value={form.area}
-          onChange={e => setForm({ ...form, area: e.target.value as AlunoArea })}
+          onChange={e => setForm({ ...form, area: e.target.value as StudentArea })}
           style={inputStyle}
         >
           {areas.map(a => <option key={a} value={a}>{AREA_LABELS[a]}</option>)}
@@ -100,10 +100,10 @@ export default function AdminForm({ initial, onSaved, onCancel }: Props) {
       {field('Gênero', (
         <select
           value={form.gender}
-          onChange={e => setForm({ ...form, gender: e.target.value as AlunoGender })}
+          onChange={e => setForm({ ...form, gender: e.target.value as StudentGender })}
           style={inputStyle}
         >
-          {(Object.keys(GENDER_LABELS) as AlunoGender[]).map(g => (
+          {(Object.keys(GENDER_LABELS) as StudentGender[]).map(g => (
             <option key={g} value={g}>{GENDER_LABELS[g]}</option>
           ))}
         </select>

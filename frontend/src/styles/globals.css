@@ -23,7 +23,7 @@ button {
   to { transform: rotate(360deg); }
 }
 
-.aluno-popup .mapboxgl-popup-content {
+.student-popup .mapboxgl-popup-content {
   background: rgba(8, 10, 20, 0.95);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -33,11 +33,11 @@ button {
   color: #fff;
 }
 
-.aluno-popup .mapboxgl-popup-tip {
+.student-popup .mapboxgl-popup-tip {
   display: none;
 }
 
-.aluno-popup .mapboxgl-popup-close-button {
+.student-popup .mapboxgl-popup-close-button {
   color: #64748b;
   font-size: 18px;
   padding: 4px 8px;
@@ -45,7 +45,7 @@ button {
   top: 4px;
 }
 
-.aluno-popup .mapboxgl-popup-close-button:hover {
+.student-popup .mapboxgl-popup-close-button:hover {
   color: #fff;
   background: transparent;
 }

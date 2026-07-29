@@ -1,22 +1,22 @@
 import { useEffect, useRef, useCallback } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import type { AlunoGlobe, AlunoCard } from '../../types';
+import type { StudentGlobe, StudentCard } from '../../types';
 import { AREA_COLORS, AREA_LABELS, SENIORITY_LABELS } from '../../lib/colors';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 interface Props {
-  alunos: AlunoGlobe[];
+  students: StudentGlobe[];
   activeArea: string | null;
   onMarkerClick: (id: string) => void;
   selectedId: string | null;
-  card: AlunoCard | null;
+  card: StudentCard | null;
   loadingCard: boolean;
   onClose: () => void;
 }
 
-function buildPopupHTML(card: AlunoCard): string {
+function buildPopupHTML(card: StudentCard): string {
   const color = AREA_COLORS[card.area] || '#ffffff';
   const areaLabel = AREA_LABELS[card.area] || card.area;
   const seniorityLabel = card.seniority ? SENIORITY_LABELS[card.seniority] : null;
@@ -84,12 +84,12 @@ function buildLoadingHTML(): string {
   `;
 }
 
-export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selectedId, card, loadingCard, onClose }: Props) {
+export default function MapboxGlobe({ students, activeArea, onMarkerClick, selectedId, card, loadingCard, onClose }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<Map<string, { marker: mapboxgl.Marker; wrapper: HTMLDivElement }>>(new Map());
   const popupRef = useRef<mapboxgl.Popup | null>(null);
-  const popupAlunoIdRef = useRef<string | null>(null);
+  const popupStudentIdRef = useRef<string | null>(null);
   const replacingPopupRef = useRef(false);
   const spinningRef = useRef(true);
 
@@ -152,9 +152,9 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
     markersRef.current.forEach(({ marker }) => marker.remove());
     markersRef.current.clear();
 
-    const filtered = alunos.filter(a => !activeArea || a.area === activeArea);
+    const filtered = students.filter(s => !activeArea || s.area === activeArea);
 
-    filtered.forEach(aluno => {
+    filtered.forEach(student => {
       const wrapper = document.createElement('div');
       wrapper.style.width = '60px';
       wrapper.style.height = '60px';
@@ -171,8 +171,8 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
       inner.style.background = '#1a1a1e';
 
       const img = document.createElement('img');
-      img.src = aluno.avatarUrl;
-      img.alt = aluno.anonymousName;
+      img.src = student.avatarUrl;
+      img.alt = student.anonymousName;
       img.style.width = '100%';
       img.style.height = '100%';
       img.style.objectFit = 'cover';
@@ -190,18 +190,18 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
       });
 
       const marker = new mapboxgl.Marker({ element: wrapper, anchor: 'center' })
-        .setLngLat([aluno.lng, aluno.lat])
+        .setLngLat([student.lng, student.lat])
         .addTo(map);
 
       wrapper.addEventListener('click', (e) => {
         e.stopPropagation();
         spinningRef.current = false;
-        handleMarkerClick(aluno.id);
+        handleMarkerClick(student.id);
       });
 
-      markersRef.current.set(aluno.id, { marker, wrapper });
+      markersRef.current.set(student.id, { marker, wrapper });
     });
-  }, [alunos, activeArea, handleMarkerClick]);
+  }, [students, activeArea, handleMarkerClick]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -220,14 +220,14 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
       return;
     }
 
-    const aluno = alunos.find(a => a.id === selectedId);
-    if (!aluno) return;
+    const student = students.find(s => s.id === selectedId);
+    if (!student) return;
 
     const entry = markersRef.current.get(selectedId);
     if (popupRef.current) {
-      const prevAluno = popupRef.current.getLngLat();
-      const isSameAluno = prevAluno.lng === aluno.lng && prevAluno.lat === aluno.lat;
-      if (isSameAluno && !loadingCard && card) {
+      const prevPos = popupRef.current.getLngLat();
+      const isSameStudent = prevPos.lng === student.lng && prevPos.lat === student.lat;
+      if (isSameStudent && !loadingCard && card) {
         popupRef.current.setHTML(buildPopupHTML(card));
         return;
       }
@@ -243,30 +243,30 @@ export default function MapboxGlobe({ alunos, activeArea, onMarkerClick, selecte
       closeButton: true,
       closeOnClick: true,
       maxWidth: '380px',
-      className: 'aluno-popup',
+      className: 'student-popup',
       anchor: 'top-left',
       offset: [-51, -51],
     })
-      .setLngLat([aluno.lng, aluno.lat])
+      .setLngLat([student.lng, student.lat])
       .setHTML(loadingCard || !card ? buildLoadingHTML() : buildPopupHTML(card))
       .addTo(map);
 
     popup.on('close', () => {
       popupRef.current = null;
-      const prevId = popupAlunoIdRef.current;
+      const prevId = popupStudentIdRef.current;
       if (prevId) {
         const prevEntry = markersRef.current.get(prevId);
         if (prevEntry) prevEntry.wrapper.style.visibility = 'visible';
       }
-      popupAlunoIdRef.current = null;
+      popupStudentIdRef.current = null;
       if (!replacingPopupRef.current) {
         onClose();
       }
     });
 
     popupRef.current = popup;
-    popupAlunoIdRef.current = selectedId;
-  }, [selectedId, card, loadingCard, alunos, onClose]);
+    popupStudentIdRef.current = selectedId;
+  }, [selectedId, card, loadingCard, students, onClose]);
 
   return (
     <div

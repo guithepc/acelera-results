@@ -1,5 +1,5 @@
 import { AREA_COLORS, AREA_LABELS } from '../../lib/colors';
-import type { AlunoArea } from '../../types';
+import type { StudentArea } from '../../types';
 
 interface Props {
   activeArea: string | null;
@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function FilterBar({ activeArea, onChange }: Props) {
-  const areas = Object.keys(AREA_LABELS) as AlunoArea[];
+  const areas = Object.keys(AREA_LABELS) as StudentArea[];
 
   return (
     <div style={{

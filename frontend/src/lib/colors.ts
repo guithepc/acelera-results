@@ -1,6 +1,6 @@
-import type { AlunoArea, AlunoSeniority } from '../types';
+import type { StudentArea, StudentSeniority } from '../types';
 
-export const AREA_COLORS: Record<AlunoArea, string> = {
+export const AREA_COLORS: Record<StudentArea, string> = {
   FRONTEND:      '#60A5FA',
   BACKEND:       '#34D399',
   FULLSTACK:     '#FB923C',
@@ -13,7 +13,7 @@ export const AREA_COLORS: Record<AlunoArea, string> = {
   SUPORTE:       '#FB7185',
 };
 
-export const AREA_LABELS: Record<AlunoArea, string> = {
+export const AREA_LABELS: Record<StudentArea, string> = {
   FRONTEND:      'Front-end',
   BACKEND:       'Back-end',
   FULLSTACK:     'Fullstack',
@@ -26,7 +26,7 @@ export const AREA_LABELS: Record<AlunoArea, string> = {
   SUPORTE:       'Suporte',
 };
 
-export const SENIORITY_LABELS: Record<AlunoSeniority, string> = {
+export const SENIORITY_LABELS: Record<StudentSeniority, string> = {
   TRAINEE:    'Trainee',
   ESTAGIO:    'Estágio',
   JUNIOR:     'Júnior',

@@ -2,17 +2,17 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
 import { Suspense } from 'react';
 import EarthMesh from './EarthMesh';
-import AlunoMarker from './AlunoMarker';
+import StudentMarker from './StudentMarker';
 import AtmosphereGlow from './AtmosphereGlow';
-import type { AlunoGlobe } from '../../types';
+import type { StudentGlobe } from '../../types';
 
 interface Props {
-  alunos: AlunoGlobe[];
+  students: StudentGlobe[];
   activeArea: string | null;
   onMarkerClick: (id: string) => void;
 }
 
-export default function GlobeScene({ alunos, activeArea, onMarkerClick }: Props) {
+export default function GlobeScene({ students, activeArea, onMarkerClick }: Props) {
   return (
     <Canvas
       camera={{ position: [0, 0, 2.8], fov: 45 }}
@@ -37,13 +37,13 @@ export default function GlobeScene({ alunos, activeArea, onMarkerClick }: Props)
         <EarthMesh />
         <AtmosphereGlow />
 
-        {alunos
-          .filter(a => !activeArea || a.area === activeArea)
-          .map(aluno => (
-            <AlunoMarker
-              key={aluno.id}
-              aluno={aluno}
-              onClick={() => onMarkerClick(aluno.id)}
+        {students
+          .filter(s => !activeArea || s.area === activeArea)
+          .map(student => (
+            <StudentMarker
+              key={student.id}
+              student={student}
+              onClick={() => onMarkerClick(student.id)}
             />
           ))}
       </Suspense>

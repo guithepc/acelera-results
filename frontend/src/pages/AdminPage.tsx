@@ -3,20 +3,20 @@ import AdminLogin from '../components/Admin/AdminLogin';
 import AdminTable from '../components/Admin/AdminTable';
 import AdminForm  from '../components/Admin/AdminForm';
 import { adminApi } from '../lib/api';
-import type { AlunoAdmin } from '../types';
+import type { StudentAdmin } from '../types';
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(!!sessionStorage.getItem('admin-token'));
-  const [alunos, setAlunos] = useState<AlunoAdmin[]>([]);
+  const [students, setStudents] = useState<StudentAdmin[]>([]);
   const [loading, setLoading] = useState(false);
-  const [editing, setEditing] = useState<AlunoAdmin | null>(null);
+  const [editing, setEditing] = useState<StudentAdmin | null>(null);
   const [creating, setCreating] = useState(false);
 
   const load = async () => {
     setLoading(true);
     try {
-      const r = await adminApi.get<AlunoAdmin[]>('/api/admin/alunos');
-      setAlunos(r.data);
+      const r = await adminApi.get<StudentAdmin[]>('/api/admin/students');
+      setStudents(r.data);
     } catch {
       setAuthed(false);
       sessionStorage.removeItem('admin-token');
@@ -81,8 +81,8 @@ export default function AdminPage() {
           <p style={{ color: '#94a3b8' }}>carregando...</p>
         ) : (
           <AdminTable
-            alunos={alunos}
-            onEdit={a => { setEditing(a); setCreating(false); }}
+            students={students}
+            onEdit={s => { setEditing(s); setCreating(false); }}
             onChanged={load}
           />
         )}

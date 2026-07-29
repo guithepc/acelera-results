@@ -3,29 +3,29 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { latLngToVector3 } from '../../lib/geoUtils';
 import { AREA_COLORS } from '../../lib/colors';
-import type { AlunoGlobe } from '../../types';
+import type { StudentGlobe } from '../../types';
 
 interface Props {
-  aluno: AlunoGlobe;
+  student: StudentGlobe;
   onClick: () => void;
 }
 
-export default function AlunoMarker({ aluno, onClick }: Props) {
+export default function StudentMarker({ student, onClick }: Props) {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
 
-  const position = latLngToVector3(aluno.lat, aluno.lng, 1.01);
-  const color    = new THREE.Color(AREA_COLORS[aluno.area] || '#ffffff');
+  const position = latLngToVector3(student.lat, student.lng, 1.01);
+  const color    = new THREE.Color(AREA_COLORS[student.area] || '#ffffff');
 
   useFrame(({ clock }) => {
     if (!meshRef.current || !glowRef.current) return;
     const t = clock.getElapsedTime();
-    const pulse = Math.sin(t * 2 + aluno.lat) * 0.15 + 0.85;
+    const pulse = Math.sin(t * 2 + student.lat) * 0.15 + 0.85;
     meshRef.current.scale.setScalar(hovered ? 2.2 : pulse);
     glowRef.current.scale.setScalar(hovered ? 3.5 : pulse * 2.2);
     (glowRef.current.material as THREE.MeshBasicMaterial).opacity =
-      hovered ? 0.5 : (Math.sin(t * 2 + aluno.lat) * 0.15 + 0.25);
+      hovered ? 0.5 : (Math.sin(t * 2 + student.lat) * 0.15 + 0.25);
   });
 
   return (
