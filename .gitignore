@@ -1,4 +1,7 @@
 .env
+.env.*
+!.env.example
+deploy/.env
 volumes/
 *.log
 .DS_Store
