@@ -489,8 +489,6 @@ quarkus.http.cors.headers=accept,authorization,content-type,x-admin-token
 # cache
 quarkus.cache.caffeine."alunos-globe".expire-after-write=5M
 
-# segredos via env vars
-anthropic.api.key=${ANTHROPIC_API_KEY:}
 admin.token=${ADMIN_TOKEN:dev-token-local}
 
 # nominatim

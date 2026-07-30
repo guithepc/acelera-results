@@ -127,7 +127,6 @@ Atualizar template:
 DB_USER=aceleradev
 DB_PASS=troca-isso-por-senha-forte
 DB_NAME=aceleradev
-ANTHROPIC_API_KEY=sk-ant-...
 ADMIN_TOKEN=troca-isso-por-token-aleatorio-longo
 VITE_MAPBOX_TOKEN=pk.xxx
 ```
@@ -145,7 +144,6 @@ services:
       DB_PASS: ${DB_PASS}
       DB_HOST: postgres
       DB_NAME: ${DB_NAME}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       ADMIN_TOKEN: ${ADMIN_TOKEN}
     labels:
       traefik.enable: "true"

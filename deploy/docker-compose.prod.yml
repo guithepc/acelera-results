@@ -7,7 +7,6 @@ services:
       DB_PASS: ${DB_PASS}
       DB_HOST: postgres
       DB_NAME: ${DB_NAME}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       ADMIN_TOKEN: ${ADMIN_TOKEN}
     labels:
       traefik.enable: "true"

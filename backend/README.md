@@ -8,8 +8,7 @@ Backend Quarkus do projeto AceleraDev Globe.
 # 1. sobe o postgres
 docker compose up -d
 
-# 2. exporta as envs (ANTHROPIC_API_KEY obrigatória pra criar aluno)
-export ANTHROPIC_API_KEY="sk-ant-..."
+
 export ADMIN_TOKEN="dev-token-local"
 
 # 3. roda em dev mode (hot reload)
