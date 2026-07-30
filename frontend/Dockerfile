@@ -1,6 +1,8 @@
 # ---- build ----
 FROM node:20-alpine AS build
 WORKDIR /app
+ARG VITE_MAPBOX_TOKEN
+ENV VITE_MAPBOX_TOKEN=$VITE_MAPBOX_TOKEN
 COPY package*.json ./
 RUN npm ci
 COPY . .

@@ -1,0 +1,62 @@
+services:
+  backend:
+    build: ../backend
+    restart: unless-stopped
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_HOST: postgres
+      DB_NAME: ${DB_NAME}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ADMIN_TOKEN: ${ADMIN_TOKEN}
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.acelera-api.rule: "Host(`resultados.aceleradev.com.br`) && PathPrefix(`/api`)"
+      traefik.http.routers.acelera-api.entrypoints: websecure
+      traefik.http.routers.acelera-api.tls.certresolver: letsencrypt
+      traefik.http.routers.acelera-api.middlewares: waf@file,ratelimit@file,secheaders@file
+      traefik.http.services.acelera-api.loadbalancer.server.port: "8080"
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [traefik_proxy, internal]
+
+  frontend:
+    build:
+      context: ../frontend
+      args:
+        VITE_MAPBOX_TOKEN: ${VITE_MAPBOX_TOKEN}
+    restart: unless-stopped
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.acelera-front.rule: "Host(`resultados.aceleradev.com.br`)"
+      traefik.http.routers.acelera-front.entrypoints: websecure
+      traefik.http.routers.acelera-front.tls.certresolver: letsencrypt
+      traefik.http.routers.acelera-front.middlewares: ratelimit@file,secheaders@file
+      traefik.http.services.acelera-front.loadbalancer.server.port: "80"
+    networks: [traefik_proxy]
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [internal]
+
+networks:
+  traefik_proxy:
+    external: true
+  internal:
+    name: acelera_internal
+    internal: true
+
+volumes:
+  pgdata:
