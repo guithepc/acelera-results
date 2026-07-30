@@ -1,3 +1,5 @@
+name: acelera
+
 services:
   backend:
     build: ../backend
