@@ -4,6 +4,10 @@
   <img src="docs/globe-preview.png" alt="AceleraDev Globe — Interactive 3D map showing developers across the world" width="100%" />
 </p>
 
+<p align="center">
+  <a href="https://resultados.aceleradev.com.br"><strong>resultados.aceleradev.com.br</strong></a>
+</p>
+
 An interactive 3D globe that visualizes real career outcomes from [AceleraDev](https://aceleradev.com.br) — a tech career acceleration program. Each marker on the map represents a real developer who landed their first tech job, switched careers, or achieved a significant salary increase. All data is anonymized with generated avatars and fictional names, but the results are real.
 
 ## Features
