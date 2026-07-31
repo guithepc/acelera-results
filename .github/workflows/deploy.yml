@@ -22,7 +22,9 @@ jobs:
           script: |
             set -e
             cd /opt/acelera-results
-            git pull --ff-only
+            git fetch origin
+            git checkout ${{ github.ref_name }}
+            git pull --ff-only origin ${{ github.ref_name }}
             docker compose -f deploy/docker-compose.prod.yml build
             docker compose -f deploy/docker-compose.prod.yml up -d --no-recreate postgres
             docker compose -f deploy/docker-compose.prod.yml up -d backend frontend
