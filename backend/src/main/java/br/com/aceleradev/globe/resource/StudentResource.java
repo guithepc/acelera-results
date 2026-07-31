@@ -26,7 +26,7 @@ public class StudentResource {
     @GET
     @CacheResult(cacheName = "students-globe")
     public List<StudentGlobeDTO> listAll() {
-        LOG.info("=== [v2.3.3] GET /api/students called ===");
+        LOG.info("=== GET /api/students called ===");
 
         return Student.<Student>listAll()
                 .stream()
