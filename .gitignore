@@ -6,3 +6,4 @@ volumes/
 *.log
 .DS_Store
 .maestri/
+CLAUDE.md
