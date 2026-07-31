@@ -15,13 +15,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.jboss.logging.Logger;
+
 @Path("/api/students")
 @Produces(MediaType.APPLICATION_JSON)
 public class StudentResource {
 
+    private static final Logger LOG = Logger.getLogger(StudentResource.class);
+
     @GET
     @CacheResult(cacheName = "students-globe")
     public List<StudentGlobeDTO> listAll() {
+        LOG.info("=== [v2.3.2] GET /api/students called ===");
+
         return Student.<Student>listAll()
                 .stream()
                 .map(s -> new StudentGlobeDTO(
