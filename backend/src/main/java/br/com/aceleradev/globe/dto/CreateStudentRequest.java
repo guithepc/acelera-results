@@ -18,6 +18,7 @@ public class CreateStudentRequest {
     public StudentSeniority seniority;
 
     @NotBlank
+    @Size(max = 100)
     public String city;
 
     @NotBlank
@@ -25,17 +26,22 @@ public class CreateStudentRequest {
     public String state;
 
     @NotBlank
+    @Size(max = 50)
     public String salary;
 
     @NotNull
     public Boolean firstJobInIt;
 
     @NotBlank
+    @Size(max = 2000)
     public String keyInsight;
 
+    @Size(max = 2000)
     public String stacks;
 
+    @Size(max = 50)
     public String courseTime;
 
+    @Size(max = 100)
     public String neighborhood;
 }

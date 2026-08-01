@@ -2,6 +2,7 @@ package br.com.aceleradev.globe.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
@@ -35,6 +36,7 @@ public class GeocodingService {
 
     public record Coords(double lat, double lng) {}
 
+    @CacheResult(cacheName = "geocode")
     public Coords geocode(String city, String state, String neighborhood) {
         LOG.infof("Geocoding address: city=%s, state=%s, neighborhood=%s", city, state, neighborhood);
         String query = (neighborhood != null && !neighborhood.isBlank())

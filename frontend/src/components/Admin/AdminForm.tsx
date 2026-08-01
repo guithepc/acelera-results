@@ -17,6 +17,8 @@ const EMPTY: CreateStudentRequest = {
   salary: '',
   firstJobInIt: false,
   keyInsight: '',
+  stacks: '',
+  courseTime: '',
 };
 
 const GENDER_LABELS: Record<StudentGender, string> = {
@@ -36,6 +38,8 @@ export default function AdminForm({ initial, onSaved, onCancel }: Props) {
           salary: initial.salary,
           firstJobInIt: initial.firstJobInIt,
           keyInsight: initial.keyInsight,
+          stacks: initial.stacks || '',
+          courseTime: initial.courseTime || '',
         }
       : EMPTY
   );
@@ -138,6 +142,14 @@ export default function AdminForm({ initial, onSaved, onCancel }: Props) {
           rows={3}
           style={{ ...inputStyle, resize: 'vertical', fontFamily: 'inherit' }}
         />
+      ))}
+
+      {field('Stacks (separadas por vírgula)', (
+        <input value={form.stacks || ''} placeholder="React, TypeScript, Node.js" onChange={e => setForm({ ...form, stacks: e.target.value })} style={inputStyle} />
+      ))}
+
+      {field('Tempo no curso', (
+        <input value={form.courseTime || ''} placeholder="6 meses" onChange={e => setForm({ ...form, courseTime: e.target.value })} style={inputStyle} />
       ))}
 
       {error && (

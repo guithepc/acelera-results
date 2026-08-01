@@ -11,6 +11,7 @@ import io.quarkus.panache.common.Sort;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -44,6 +45,7 @@ public class AdminStudentResource {
 
     @POST
     @CacheInvalidateAll(cacheName = "students-globe")
+    @CacheInvalidateAll(cacheName = "students-stats")
     public Response create(@Valid CreateStudentRequest req) {
         Student s = studentService.create(req);
         return Response.status(201).entity(toAdminDTO(s)).build();
@@ -53,9 +55,13 @@ public class AdminStudentResource {
     @Path("/{id}")
     @Transactional
     @CacheInvalidateAll(cacheName = "students-globe")
-    public Response update(@PathParam("id") UUID id, @Valid CreateStudentRequest req) {
-        Student s = Student.findById(id);
+    @CacheInvalidateAll(cacheName = "students-stats")
+    public Response update(@PathParam("id") String rawId, @Valid CreateStudentRequest req) {
+        Student s = Student.findById(parseUuid(rawId));
         if (s == null) throw new NotFoundException();
+        if (s.area != req.area || s.gender != req.gender) {
+            s.avatarUrl = avatarService.generate(s.anonymousName, req.gender, req.area);
+        }
         s.area         = req.area;
         s.gender       = req.gender;
         s.seniority    = req.seniority;
@@ -73,8 +79,9 @@ public class AdminStudentResource {
     @Path("/{id}")
     @Transactional
     @CacheInvalidateAll(cacheName = "students-globe")
-    public Response delete(@PathParam("id") UUID id) {
-        boolean deleted = Student.deleteById(id);
+    @CacheInvalidateAll(cacheName = "students-stats")
+    public Response delete(@PathParam("id") String rawId) {
+        boolean deleted = Student.deleteById(parseUuid(rawId));
         if (!deleted) throw new NotFoundException();
         return Response.noContent().build();
     }
@@ -83,13 +90,22 @@ public class AdminStudentResource {
     @Path("/{id}/regenerate")
     @Transactional
     @CacheInvalidateAll(cacheName = "students-globe")
-    public Response regenerate(@PathParam("id") UUID id) {
-        Student s = Student.findById(id);
+    @CacheInvalidateAll(cacheName = "students-stats")
+    public Response regenerate(@PathParam("id") String rawId) {
+        Student s = Student.findById(parseUuid(rawId));
         if (s == null) throw new NotFoundException();
         String name = nameGenerator.generate();
         s.anonymousName = name;
         s.avatarUrl     = avatarService.generate(name, s.gender, s.area);
         return Response.ok(toAdminDTO(s)).build();
+    }
+
+    private static UUID parseUuid(String rawId) {
+        try {
+            return UUID.fromString(rawId);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid id: " + rawId);
+        }
     }
 
     private StudentAdminDTO toAdminDTO(Student s) {
