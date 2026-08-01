@@ -16,6 +16,7 @@ public class StudentService {
     @Inject GeocodingService       geocodingService;
     @Inject AnonymousNameGenerator nameGenerator;
 
+    @Transactional
     public Student create(CreateStudentRequest req) {
         LOG.infof("Starting new student registration: area=%s, city=%s, state=%s", req.area, req.city, req.state);
 
@@ -28,8 +29,7 @@ public class StudentService {
         return student;
     }
 
-    @Transactional
-    Student persist(CreateStudentRequest req, String name, String avatarUrl, GeocodingService.Coords coords) {
+    private Student persist(CreateStudentRequest req, String name, String avatarUrl, GeocodingService.Coords coords) {
         LOG.info("Saving student to database");
         Student student      = new Student();
         student.area         = req.area;

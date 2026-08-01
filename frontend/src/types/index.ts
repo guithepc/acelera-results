@@ -64,4 +64,7 @@ export interface CreateStudentRequest {
   salary: string;
   firstJobInIt: boolean;
   keyInsight: string;
+  stacks?: string;
+  courseTime?: string;
+  neighborhood?: string;
 }

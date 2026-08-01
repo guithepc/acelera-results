@@ -4,6 +4,7 @@ import br.com.aceleradev.globe.domain.Student;
 import br.com.aceleradev.globe.dto.StudentCardDTO;
 import br.com.aceleradev.globe.dto.StudentGlobeDTO;
 import io.quarkus.cache.CacheResult;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
@@ -32,8 +33,8 @@ public class StudentResource {
 
     @GET
     @Path("/{id}")
-    public StudentCardDTO findById(@PathParam("id") UUID id) {
-        Student s = Student.findById(id);
+    public StudentCardDTO findById(@PathParam("id") String rawId) {
+        Student s = Student.findById(parseUuid(rawId));
         if (s == null) throw new NotFoundException();
         return new StudentCardDTO(
                 s.id, s.anonymousName, s.avatarUrl,
@@ -43,11 +44,20 @@ public class StudentResource {
 
     @GET
     @Path("/stats")
+    @CacheResult(cacheName = "students-stats")
     public Map<String, Object> stats() {
         long total  = Student.count();
         long states = Student.getEntityManager()
                 .createQuery("SELECT COUNT(DISTINCT s.state) FROM Student s", Long.class)
                 .getSingleResult();
         return Map.of("total", total, "states", states);
+    }
+
+    private static UUID parseUuid(String rawId) {
+        try {
+            return UUID.fromString(rawId);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid id: " + rawId);
+        }
     }
 }

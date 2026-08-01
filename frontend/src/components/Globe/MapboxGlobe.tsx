@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import type { StudentGlobe, StudentCard } from '../../types';
-import { AREA_COLORS, AREA_LABELS, SENIORITY_LABELS } from '../../lib/colors';
+import { buildPopupHTML } from '../../lib/popup';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -14,62 +14,6 @@ interface Props {
   card: StudentCard | null;
   loadingCard: boolean;
   onClose: () => void;
-}
-
-function buildPopupHTML(card: StudentCard): string {
-  const color = AREA_COLORS[card.area] || '#ffffff';
-  const areaLabel = AREA_LABELS[card.area] || card.area;
-  const seniorityLabel = card.seniority ? SENIORITY_LABELS[card.seniority] : null;
-
-  return `
-    <div style="display:flex;gap:12px;align-items:flex-start;min-width:260px;max-width:300px;">
-      <img src="${card.avatarUrl}" alt="${card.anonymousName}"
-        style="width:69px;height:69px;border-radius:50%;border:2px solid #2a2a2e;box-shadow:0 0 12px #34d399, 0 0 24px #34d39988;flex-shrink:0;background:#1a1a1e;" />
-      <div style="flex:1;min-width:0;">
-        <div style="padding:8px;background:rgba(255,255,255,0.05);border-radius:6px;border-left:3px solid ${color};margin-bottom:8px;">
-          <p style="color:#94a3b8;font-size:13px;line-height:1.6;margin:0;font-style:italic;">
-            "${card.keyInsight}"
-          </p>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-          <strong style="color:#fff;font-size:17px;line-height:1.3;">${card.anonymousName}</strong>
-        </div>
-        <div style="color:#94a3b8;font-size:14px;margin-top:2px;">
-          📍 ${card.city}, ${card.state}
-        </div>
-        <div style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;">
-          <span style="background:${color}22;color:${color};border:1px solid ${color}44;padding:2px 8px;border-radius:12px;font-size:13px;font-weight:600;">
-            ${areaLabel}
-          </span>
-          ${seniorityLabel ? `
-          <span style="background:rgba(148,163,184,0.15);color:#cbd5e1;border:1px solid rgba(148,163,184,0.3);padding:2px 8px;border-radius:12px;font-size:13px;font-weight:600;">
-            ${seniorityLabel}
-          </span>` : ''}
-          ${card.firstJobInIt ? `
-          <span style="background:rgba(251,191,36,0.15);color:#fbbf24;border:1px solid rgba(251,191,36,0.3);padding:2px 8px;border-radius:12px;font-size:13px;font-weight:600;">
-            1ª vaga em TI
-          </span>` : ''}
-        </div>
-        ${card.stacks ? `
-        <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;">
-          ${card.stacks.split(',').map(s => s.trim()).filter(Boolean).map(stack => `
-            <span style="color:#34d399;border:1px solid #34d399;padding:2px 8px;border-radius:4px;font-size:13px;font-weight:600;">
-              ${stack}
-            </span>
-          `).join('')}
-        </div>` : ''}
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:6px 8px;background:rgba(255,255,255,0.05);border-radius:6px;">
-          <span style="color:#64748b;font-size:14px;">Salário</span>
-          <span style="color:#fff;font-size:15px;font-weight:600;">${card.salary}</span>
-        </div>
-        ${card.courseTime ? `
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding:6px 8px;background:rgba(255,255,255,0.05);border-radius:6px;">
-          <span style="color:#64748b;font-size:14px;">Tempo no curso</span>
-          <span style="color:#fff;font-size:15px;font-weight:600;">${card.courseTime}</span>
-        </div>` : ''}
-      </div>
-    </div>
-  `;
 }
 
 function buildLoadingHTML(): string {
@@ -89,8 +33,7 @@ export default function MapboxGlobe({ students, activeArea, onMarkerClick, selec
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<Map<string, { marker: mapboxgl.Marker; wrapper: HTMLDivElement }>>(new Map());
   const popupRef = useRef<mapboxgl.Popup | null>(null);
-  const popupStudentIdRef = useRef<string | null>(null);
-  const replacingPopupRef = useRef(false);
+  const popupGenRef = useRef(0);
   const spinningRef = useRef(true);
 
   useEffect(() => {
@@ -149,16 +92,23 @@ export default function MapboxGlobe({ students, activeArea, onMarkerClick, selec
     const map = mapRef.current;
     if (!map) return;
 
-    markersRef.current.forEach(({ marker }) => marker.remove());
-    markersRef.current.clear();
+    const seen = new Set<string>();
 
-    const filtered = students.filter(s => !activeArea || s.area === activeArea);
+    students.forEach(student => {
+      seen.add(student.id);
+      const entry = markersRef.current.get(student.id);
+      const visible = (!activeArea || student.area === activeArea) && student.id !== selectedId;
 
-    filtered.forEach(student => {
+      if (entry) {
+        entry.wrapper.style.visibility = visible ? 'visible' : 'hidden';
+        return;
+      }
+
       const wrapper = document.createElement('div');
       wrapper.style.width = '60px';
       wrapper.style.height = '60px';
       wrapper.style.cursor = 'pointer';
+      wrapper.style.visibility = visible ? 'visible' : 'hidden';
 
       const inner = document.createElement('div');
       inner.style.width = '100%';
@@ -201,22 +151,29 @@ export default function MapboxGlobe({ students, activeArea, onMarkerClick, selec
 
       markersRef.current.set(student.id, { marker, wrapper });
     });
-  }, [students, activeArea, handleMarkerClick]);
+
+    markersRef.current.forEach(({ marker }, id) => {
+      if (!seen.has(id)) marker.remove();
+    });
+    markersRef.current.forEach((_, id) => {
+      if (!seen.has(id)) markersRef.current.delete(id);
+    });
+  }, [students, activeArea, selectedId, handleMarkerClick]);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    if (!selectedId) {
+    const closePopup = () => {
       if (popupRef.current) {
-        replacingPopupRef.current = true;
+        popupGenRef.current += 1;
         popupRef.current.remove();
-        replacingPopupRef.current = false;
         popupRef.current = null;
       }
-      markersRef.current.forEach(({ wrapper }) => {
-        wrapper.style.visibility = 'visible';
-      });
+    };
+
+    if (!selectedId) {
+      closePopup();
       return;
     }
 
@@ -224,6 +181,7 @@ export default function MapboxGlobe({ students, activeArea, onMarkerClick, selec
     if (!student) return;
 
     const entry = markersRef.current.get(selectedId);
+
     if (popupRef.current) {
       const prevPos = popupRef.current.getLngLat();
       const isSameStudent = prevPos.lng === student.lng && prevPos.lat === student.lat;
@@ -231,13 +189,13 @@ export default function MapboxGlobe({ students, activeArea, onMarkerClick, selec
         popupRef.current.setHTML(buildPopupHTML(card));
         return;
       }
-      replacingPopupRef.current = true;
-      popupRef.current.remove();
-      replacingPopupRef.current = false;
-      popupRef.current = null;
+      closePopup();
     }
 
     if (entry) entry.wrapper.style.visibility = 'hidden';
+
+    const gen = popupGenRef.current + 1;
+    popupGenRef.current = gen;
 
     const popup = new mapboxgl.Popup({
       closeButton: true,
@@ -252,20 +210,14 @@ export default function MapboxGlobe({ students, activeArea, onMarkerClick, selec
       .addTo(map);
 
     popup.on('close', () => {
+      if (gen !== popupGenRef.current) return;
       popupRef.current = null;
-      const prevId = popupStudentIdRef.current;
-      if (prevId) {
-        const prevEntry = markersRef.current.get(prevId);
-        if (prevEntry) prevEntry.wrapper.style.visibility = 'visible';
-      }
-      popupStudentIdRef.current = null;
-      if (!replacingPopupRef.current) {
-        onClose();
-      }
+      const prevEntry = markersRef.current.get(selectedId);
+      if (prevEntry) prevEntry.wrapper.style.visibility = 'visible';
+      onClose();
     });
 
     popupRef.current = popup;
-    popupStudentIdRef.current = selectedId;
   }, [selectedId, card, loadingCard, students, onClose]);
 
   return (
